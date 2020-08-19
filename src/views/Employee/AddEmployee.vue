@@ -159,7 +159,7 @@ export default {
     ];
 
     this.$http
-      .get("https://localhost:44349/api/Account")
+      .get("https://isotopes.azurewebsites.net/api/Account")
       .then((response) => response.data)
       .then((dataresponse) => dataresponse.data)
       .then((data) => {
@@ -169,7 +169,7 @@ export default {
 
     //get all the benefits and populate the dropdown
     this.$http
-      .get("https://localhost:44349/api/Benefits")
+      .get("https://isotopes.azurewebsites.net/api/Benefits")
       .then((response) => response.data)
       .then((dataresponse) => dataresponse.data)
       .then((data) => {
@@ -283,7 +283,7 @@ export default {
 
       var dataToSend = JSON.stringify(newEmployee);
       this.$http
-        .post("https://localhost:44349/api/Employees", dataToSend, {
+        .post("https://isotopes.azurewebsites.net/api/Employees", dataToSend, {
           headers: { "Content-Type": "application/json" },
         })
         .then((response) => {

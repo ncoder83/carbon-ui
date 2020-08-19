@@ -56,7 +56,7 @@ export default {
   },
   mounted() {
     this.$http
-      .get("https://localhost:44349/api/Benefits")
+      .get("https://isotopes.azurewebsites.net/api/Benefits")
       .then((response) => response.data)
       .then((dataresponse) => dataresponse.data)
       .then((data) => (this.benefits = data));

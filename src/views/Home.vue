@@ -85,7 +85,7 @@ export default {
   },
   mounted() {
     this.$http
-      .get("https://localhost:44349/api/Employees")
+      .get("https://isotopes.azurewebsites.net/api/Employees")
       .then((response) => response.data)
       .then((dataresponse) => dataresponse.data)
       .then((data) => (this.employees = data));

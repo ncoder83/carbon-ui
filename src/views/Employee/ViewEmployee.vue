@@ -63,7 +63,7 @@ export default {
   },
   mounted() {
     if (this.id > 0) {
-      fetch("https://localhost:44349/api/Employees/" + this.id, {
+      fetch("https://isotopes.azurewebsites.net/api/Employees/" + this.id, {
         method: "get",
       })
         .then((response) => {

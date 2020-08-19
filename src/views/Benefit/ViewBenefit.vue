@@ -54,7 +54,7 @@ export default {
   },
   mounted() {
     if (this.id > 0) {
-      fetch("https://localhost:44349/api/Benefits/" + this.id, {
+      fetch("https://isotopes.azurewebsites.net/api/Benefits/" + this.id, {
         method: "get",
       })
         .then((response) => {

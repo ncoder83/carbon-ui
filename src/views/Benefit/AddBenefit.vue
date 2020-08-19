@@ -81,7 +81,7 @@ export default {
       var dataToSend = JSON.stringify(newBenefit);
 
       this.$http
-        .post("https://localhost:44349/api/Benefits", dataToSend, {
+        .post("https://isotopes.azurewebsites.net/api/Benefits", dataToSend, {
           headers: { "Content-Type": "application/json" },
         })
         .then((response) => {
