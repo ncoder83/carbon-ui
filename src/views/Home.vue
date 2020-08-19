@@ -10,49 +10,55 @@
           <b-icon icon="person-plus"></b-icon>Add Employee
         </router-link>
       </div>
-      <table class="table table-striped table-hover table-bordered table-borderless">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Start Date</th>
-            <th>Number Dependent</th>
-            <th>Total Benefits</th>
-            <th></th>
-          </tr>
-        </thead>
 
-        <tbody>
-          <tr v-for="employee in employees" v-bind:key="employee.id">
-            <td>{{employee.id}}</td>
-            <td>{{employee.firstName}}</td>
-            <td>{{employee.lastName}}</td>
-            <td>{{employee.formattedStartDate}}</td>
-            <td align="center">{{employee.totalDependents}}</td>
-            <td align="right">$0</td>
-            <td align="center">
-              <b-button
-                variant="primary"
-                class="btn-sm mr-1"
-                v-on:click="viewEmployee(employee.id)"
-              >
-                <b-icon icon="eye"></b-icon>
-              </b-button>
-              <b-button
-                variant="warning"
-                class="btn-sm mr-1"
-                v-on:click="editEmployee(employee.id)"
-              >
-                <b-icon icon="pencil"></b-icon>
-              </b-button>
-              <b-button variant="danger" class="btn-sm" v-on:click="deleteEmployee(employee.id)">
-                <b-icon icon="trash"></b-icon>
-              </b-button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="employees.length > 0">
+        <table class="table table-sm table-striped table-bordered table-borderless table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Start Date</th>
+              <th>Number Dependent</th>
+              <th>Total Benefits</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="employee in employees" v-bind:key="employee.id">
+              <td>{{employee.id}}</td>
+              <td>{{employee.firstName}}</td>
+              <td>{{employee.lastName}}</td>
+              <td>{{employee.formattedStartDate}}</td>
+              <td align="center">{{employee.totalDependents}}</td>
+              <td align="left">{{employee.formattedBenefitCost}}</td>
+              <td align="center">
+                <b-button
+                  variant="primary"
+                  class="btn-sm mr-1"
+                  v-on:click="viewEmployee(employee.id)"
+                >
+                  <b-icon icon="eye"></b-icon>
+                </b-button>
+                <b-button
+                  variant="warning"
+                  class="btn-sm mr-1"
+                  v-on:click="editEmployee(employee.id)"
+                >
+                  <b-icon icon="pencil"></b-icon>
+                </b-button>
+                <b-button variant="danger" class="btn-sm" v-on:click="deleteEmployee(employee.id)">
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-if="employees.length == 0">
+        <div class="alert alert-secondary">No Employee available</div>
+      </div>
     </div>
   </div>
 </template>

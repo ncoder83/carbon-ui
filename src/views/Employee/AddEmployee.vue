@@ -14,26 +14,50 @@
         Benefit is too
         <b>expensive</b>. Pick another benefit.
       </b-alert>
-      <p class="h3">Yearly Salary: {{accountAmount | currency}}</p>
-      <p class="h3">
-        Benefit Cost:
-        <span class="text-danger">{{totalbenefit | currency}}</span>
-      </p>
-      <p class="h3">
-        Total Salary:
-        <span class="text-success">{{totalcost | currency}}</span>
-      </p>
+
+      <b-alert
+        v-model="showDiscountMessage"
+        variant="info"
+        dismissible
+      >Anyone whose name starts with ‘A’ gets a 10% discount, employee or dependent</b-alert>
+
+      <b-card-group deck>
+        <b-card title="Yearly Salary">
+          <b-card-text>
+            <p class="text-muted h3 float-right">{{accountAmount | currency}}</p>
+          </b-card-text>
+        </b-card>
+
+        <b-card title="Benefit Cost">
+          <b-card-text>
+            <span class="text-danger h3 float-right">{{totalbenefit | currency}}</span>
+          </b-card-text>
+        </b-card>
+
+        <b-card title="Total Salary">
+          <b-card-text>
+            <span class="text-success h3 float-right">{{totalcost | currency}}</span>
+          </b-card-text>
+        </b-card>
+      </b-card-group>
 
       <b-form>
         <b-form-select
           id="benefitInfo"
           v-model="selectedBenefit"
           v-bind:options="benefits"
-          class="col-md-8"
+          class="col-md-6 mt-3"
         ></b-form-select>
         <br />
         <label for="firstName">First Name</label>
-        <b-input id="firstName" class="col-md-4" v-model="firstname" required placeholder="John"></b-input>
+        <b-input
+          id="firstName"
+          class="col-md-4"
+          v-on:blur="checkForDiscount"
+          v-model="firstname"
+          required
+          placeholder="John"
+        ></b-input>
 
         <label for="middleName">Middle Name</label>
         <b-input id="middleName" class="col-md-2" v-model="middlename"></b-input>
@@ -79,7 +103,7 @@
             <tr v-for="(dependent, index) in dependents" v-bind:key="dependent.id">
               <td>{{dependent.firstName}}</td>
               <td>{{dependent.lastName}}</td>
-              <td>{{dependent.relationship.name}}</td>
+              <td>{{dependent.relationship}}</td>
               <th>
                 <b-button variant="danger" class="btn-sm" v-on:click="removeDependent(index)">
                   <b-icon icon="trash"></b-icon>
@@ -90,7 +114,7 @@
         </table>
       </div>
       <div v-if="dependents.length == 0">
-        <div class="alert alert-secondary">No dependents available</div>
+        <div class="alert alert-secondary">No dependents</div>
       </div>
 
       <b-button variant="primary" v-on:click="addEmployee">
@@ -127,11 +151,11 @@ export default {
   mounted() {
     this.relationships = [
       { value: null, text: "Select a relationship" },
-      { value: { id: 1, name: "Spouse" }, text: "Spouse" },
-      { value: { id: 2, name: "Son" }, text: "Son" },
-      { value: { id: 3, name: "Daughter" }, text: "Daughter" },
-      { value: { id: 4, name: "Nephew" }, text: "Nephew" },
-      { value: { id: 5, name: "Niece" }, text: "Niece" },
+      { value: { id: 1, text: "Spouse" }, text: "Spouse" },
+      { value: { id: 2, text: "Son" }, text: "Son" },
+      { value: { id: 3, text: "Daughter" }, text: "Daughter" },
+      { value: { id: 4, text: "Nephew" }, text: "Nephew" },
+      { value: { id: 5, text: "Niece" }, text: "Niece" },
     ];
 
     this.$http
@@ -179,6 +203,10 @@ export default {
           this.selectedBenefit.cpy -
           this.selectedBenefit.cpd * this.dependents.length;
       }
+
+      if (this.showDiscountMessage) {
+        total = total - this.totalbenefit * 10 * 0.01;
+      }
       return total;
     },
     totalbenefit: function () {
@@ -188,13 +216,30 @@ export default {
           this.selectedBenefit.cpy +
           this.selectedBenefit.cpd * this.dependents.length;
       }
+
       return total;
     },
     showErrorMessage: function () {
       return this.totalbenefit > this.accountAmount;
     },
+    showDiscountMessage: function () {
+      return (
+        this.checkForDiscount(this.firstname) ||
+        this.checkForDiscount(this.middlename) ||
+        this.checkForDiscount(this.lastname) ||
+        this.dependents.some(
+          (d) =>
+            this.checkForDiscount(d.firstName) ||
+            this.checkForDiscount(d.lastName)
+        )
+      );
+    },
   },
   methods: {
+    checkForDiscount(text) {
+      if (text) return text.trim().toLowerCase().charAt(0) == "a";
+      return null;
+    },
     addEmployee() {
       if (this.selectedBenefit == null) {
         alert("please select a benefit");
@@ -229,28 +274,27 @@ export default {
         username: "test",
         password: "test",
         dateOfBirth: this.dateOfBirth,
-        benefitId: this.selectedBenefit,
+        startDate: new Date(),
+        endDate: "2999-01-01",
+        createdDate: new Date(),
+        benefitId: this.selectedBenefit != null ? this.selectedBenefit.id : 0,
         dependents: this.dependents,
       };
 
       var dataToSend = JSON.stringify(newEmployee);
-
-      //   fetch("https://localhost:44349/api/Employees", {
-      //     method: "post",
-      //     mode: "cors",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: dataToSend,
-      //   }).then((response) => {
-      //     console.log(response);
-      //   });
-
       this.$http
         .post("https://localhost:44349/api/Employees", dataToSend, {
           headers: { "Content-Type": "application/json" },
         })
-        .then((response) => console.log(response));
+        .then((response) => {
+          var responseInfo = response.data;
+          if (responseInfo.success) {
+            alert("Employee added successfully");
+            this.$router.push({ name: "home" });
+          } else {
+            alert(response.message);
+          }
+        });
     },
     addDependent() {
       if (this.empty(this.dependent.firstname)) {
@@ -272,8 +316,13 @@ export default {
         firstName: this.dependent.firstname,
         middleName: "",
         lastName: this.dependent.lastname,
-        relationship: this.selectedRelationship,
+        relationship: this.selectedRelationship.text,
       });
+
+      //reset the entries for the dependent selection
+      this.dependent.firstname = null;
+      this.dependent.lastname = null;
+      this.selectedRelationship = null;
     },
     removeDependent(index) {
       this.dependents.splice(index, 1);

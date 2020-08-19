@@ -20,17 +20,20 @@
         class="mb-2"
       >
         <b-card-text>
-          <p class="h3">John Doe</p>
+          <p class="h3">{{firstName}} {{lastName}}</p>
 
           <p>
-            <b>Salary:</b> 50,000/year
+            <b>Salary:</b>
+            {{salary | currency}}
           </p>
 
           <p>
-            <b>Befenit:</b> 1,530/year
+            <b>Befenit:</b>
+            {{benefit}}
           </p>
           <p>
             <b>Dependants:</b>
+            {{dependents}}
           </p>
 
           <p>
@@ -45,7 +48,39 @@
 export default {
   name: "viewemployee",
   data() {
-    return {};
+    return {
+      id: 0,
+      firstName: null,
+      lastName: null,
+      salary: 0,
+      benefit: 0,
+      dependents: 0,
+      createdDate: null
+    };
+  },
+  created() {
+    this.id = this.$route.params.id;
+  },
+  mounted() {
+    if (this.id > 0) {
+      fetch("https://localhost:44349/api/Employees/" + this.id, {
+        method: "get",
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((jsonData) => {
+          var info = jsonData.data;
+          this.firstName = info.firstName;
+          this.lastName = info.lastName;
+          this.salary = info.yearlySalary;
+          this.dependants = info.totalDependent;
+          this.
+          this.createdDate = info.formattedCreatedDate;
+        });
+    } else {
+      alert("invalid benefit id provided");
+    }
   },
 };
 </script>

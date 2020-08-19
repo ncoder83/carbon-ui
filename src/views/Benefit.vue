@@ -11,7 +11,7 @@
         </router-link>
       </div>
 
-      <table class="table table-striped table-hover">
+      <table class="table table-sm table-striped table-bordered table-borderless table-hover">
         <thead>
           <tr>
             <th>#</th>
@@ -26,8 +26,8 @@
           <tr v-for="benefit in benefits" v-bind:key="benefit.id">
             <td>{{benefit.id}}</td>
             <td>{{benefit.title}}</td>
-            <td>{{benefit.formattedCostPerYear}}</td>
-            <td>{{benefit.formattedCostPerDependent}}</td>
+            <td align="left">{{benefit.formattedCostPerYear}}</td>
+            <td align="left">{{benefit.formattedCostPerDependent}}</td>
             <td>{{benefit.formattedCreatedDate}}</td>
             <td>
               <button class="btn btn-sm btn-primary" v-on:click="show(benefit.id)">
