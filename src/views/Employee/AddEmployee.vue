@@ -15,11 +15,10 @@
         <b>expensive</b>. Pick another benefit.
       </b-alert>
 
-      <b-alert
-        v-model="showDiscountMessage"
-        variant="info"
-        dismissible
-      >Anyone whose name starts with ‘A’ gets a 10% discount, employee or dependent</b-alert>
+      <b-alert v-model="showDiscountMessage" variant="info" dismissible>
+        Anyone whose name starts with ‘A’ gets a
+        <b>10% discount applied</b>
+      </b-alert>
 
       <b-card-group deck>
         <b-card title="Yearly Salary">

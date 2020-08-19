@@ -55,7 +55,7 @@ export default {
       salary: 0,
       benefit: 0,
       dependents: 0,
-      createdDate: null
+      createdDate: null,
     };
   },
   created() {
@@ -75,7 +75,6 @@ export default {
           this.lastName = info.lastName;
           this.salary = info.yearlySalary;
           this.dependants = info.totalDependent;
-          this.
           this.createdDate = info.formattedCreatedDate;
         });
     } else {
