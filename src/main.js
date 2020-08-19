@@ -10,10 +10,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import $ from 'jquery'
-
 Vue.prototype.$http = axios;
-Vue.prototype.jq = $;
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

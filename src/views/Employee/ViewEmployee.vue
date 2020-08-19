@@ -20,21 +20,37 @@
         class="mb-2"
       >
         <b-card-text>
-          <p class="h3">{{firstName}} {{lastName}}</p>
+          <p class="h3">
+            {{firstName}} {{lastName}}
+            <span class="float-right">
+              <b-button variant="default">
+                <b-icon icon="pencil"></b-icon>
+              </b-button>
+            </span>
+          </p>
 
+          <p>
+            <b>Start Date:</b>
+            <span class="float-right">{{startDate}}</span>
+          </p>
           <p>
             <b>Salary:</b>
-            {{salary | currency}}
+            <span class="text-success float-right">{{salary | currency}}</span>
           </p>
 
           <p>
-            <b>Befenit:</b>
-            {{benefit}}
+            <b>Befenits:</b>
+            <span class="float-right">{{benefit | currency}}</span>
           </p>
           <p>
-            <b>Dependants:</b>
-            {{dependents}}
+            <b>Dependants ({{totalDependents}})</b>
           </p>
+          <ul>
+            <li
+              v-for="dependent in dependents"
+              v-bind:key="dependent.id"
+            >({{dependent.relationship}}) {{dependent.firstName}} {{dependent.middleName}} {{dependent.lastName}}</li>
+          </ul>
 
           <p>
             <span class="text-small text-info">Created on {{createdDate}}</span>
@@ -54,8 +70,10 @@ export default {
       lastName: null,
       salary: 0,
       benefit: 0,
-      dependents: 0,
+      totalDependents: 0,
+      dependents: [],
       createdDate: null,
+      startDate: null,
     };
   },
   created() {
@@ -71,11 +89,14 @@ export default {
         })
         .then((jsonData) => {
           var info = jsonData.data;
+          console.log(info);
           this.firstName = info.firstName;
           this.lastName = info.lastName;
           this.salary = info.yearlySalary;
-          this.dependants = info.totalDependent;
+          this.totalDependents = info.totalDependents;
           this.createdDate = info.formattedCreatedDate;
+          this.startDate = info.formattedStartDate;
+          this.dependents = info.dependents;
         });
     } else {
       alert("invalid benefit id provided");
